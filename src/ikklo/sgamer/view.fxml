@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ikklo.pojo.ViewController">
+   <children>
+      <Label layoutX="82.0" layoutY="90.0" text="账号">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
+      <Label layoutX="82.0" layoutY="143.0" text="密码">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
+      <TextField fx:id="userNameInput" layoutX="157.0" layoutY="97.0" />
+      <TextField fx:id="passwordInput" layoutX="157.0" layoutY="150.0" />
+      <Button fx:id="LoginButton" layoutX="240.0" layoutY="309.0" mnemonicParsing="false" onAction="#login" prefHeight="37.0" prefWidth="121.0" text="登录" />
+      <Button fx:id="registButton" layoutX="281.0" layoutY="346.0" mnemonicParsing="false" text="注册" />
+   </children>
+</AnchorPane>
