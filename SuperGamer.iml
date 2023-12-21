@@ -17,5 +17,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="javafx.controls" level="project" />
+    <orderEntry type="module" module-name="GameServer" />
   </component>
 </module>

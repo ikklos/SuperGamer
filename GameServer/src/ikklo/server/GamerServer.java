@@ -1,5 +1,7 @@
 package ikklo.server;
 
+import com.mysql.cj.QueryResult;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -14,6 +16,7 @@ public class GamerServer {
         Connection cnn = DriverManager.getConnection(url,user,password);
 
         System.out.println(cnn);
+
         //sql语句
         cnn.close();
     }

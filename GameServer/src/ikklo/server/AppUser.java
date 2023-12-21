@@ -3,15 +3,15 @@ package ikklo.server;
 import com.mysql.cj.QueryResult;
 
 import java.rmi.server.ExportException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
+
 public class AppUser {
     private String username;
     private String password;
     private String name;
     private boolean accessed = false;
+    private ArrayList<ServerResult> resultPool = new ArrayList<ServerResult>();
     //构造方法
     public AppUser(String username, String password) {
         this.username = username;
@@ -22,11 +22,9 @@ public class AppUser {
     public String getUsername() {
         return username;
     }
-
     private void setUsername(String username) {
         this.username = username;
     }
-
     public String getPassword() {
         return password;
     }
@@ -73,4 +71,17 @@ public class AppUser {
         }
     }
 
+    //将从服务器中拿到的结果读入
+    public void regist_result(ServerResult re){
+        resultPool.add(re);
+    }
+
+    //返回一个结果
+    public ServerResult get_result(){
+        if(resultPool.isEmpty())return null;
+        ServerResult re =  resultPool.get(0);
+
+        resultPool.remove(0);
+        return re;
+    }
 }
