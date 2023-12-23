@@ -18,5 +18,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="javafx-swt" level="project" />
+    <orderEntry type="module" module-name="SuperGamer" />
   </component>
 </module>

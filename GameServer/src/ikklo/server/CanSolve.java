@@ -1,8 +1,9 @@
 package ikklo.server;
 
-import java.sql.Connection;
-import java.util.Collection;
+import ikklo.pojo.ReqResult;
 
-public interface CanSolve{
-    ServerResult solve(Connection conn);
+import java.sql.Connection;
+
+public interface CanSolve {
+    ReqResult solve(Connection conn) throws Exception;
 }
