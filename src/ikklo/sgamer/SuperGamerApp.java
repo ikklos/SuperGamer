@@ -34,6 +34,7 @@ public class SuperGamerApp extends Application {
         stage.setTitle("登录");
         stage.setOnCloseRequest(this::handleClose);
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
         System.out.println("start调用完毕");
     }

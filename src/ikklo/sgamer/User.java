@@ -10,6 +10,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+/*
+* user类
+* 是客户端的主体类，代表正在使用客户端的用户
+* 可以发送请求，处理请求结果
+*/
 public class User {
     private String username;
     private String password;
@@ -20,6 +25,7 @@ public class User {
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private Stage nowstage;
+    private String uuid = "";
 /*
 * getter 和 setter
 * 我也不知道有什么用，但我先放一个在这里
@@ -55,7 +61,19 @@ public class User {
     public void setNowstage(Stage nowstage) {
         this.nowstage = nowstage;
     }
+    public String getUuid(){
+        return this.uuid;
+     }
+    public void setUuid(String s){
+        this.uuid = s;
+    }
+    public Socket getSocket() {
+        return socket;
+    }
 
+    public void setSocket(Socket socket) {
+        this.socket = socket;
+    }
     /*
 * 构造方法
 * */
@@ -66,6 +84,7 @@ public class User {
         this.username = username;
         this.password = password;
     }
+
 
     /*
     * 呼呼，我要狠狠地连服务器口牙
@@ -83,15 +102,10 @@ public class User {
         in = new ObjectInputStream(socket.getInputStream());
 
         System.out.println("成功获取输入输出流");
+        System.out.println(out);
+        System.out.println(in);
     }
 
-    public Socket getSocket() {
-        return socket;
-    }
-
-    public void setSocket(Socket socket) {
-        this.socket = socket;
-    }
 
     //    客户端：处理请求
     /*
@@ -104,10 +118,10 @@ public class User {
     public <T extends CanSolve> void send_requirement(T req) throws Exception {
         System.out.println("正在发送请求");
         out.writeObject(req);
+        System.out.println("发送请求完毕");
     }
-//    获取结果并处理
-//    逻辑处理部分写在结果的solve函数中
-    public boolean get_result(){
+//    获取结果
+    public ReqResult get_result(){
         ReqResult res = new ReqResult() {
             @Override
             public boolean solve() {
@@ -121,7 +135,8 @@ public class User {
             System.out.println(e.getMessage());
         }
 //        处理结果并返回是否通过
-        return res.solve();
+        System.out.println(res);
+        return res;
     }
     public void UserClose() throws IOException {
         socket.close();

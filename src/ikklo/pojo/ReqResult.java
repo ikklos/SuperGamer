@@ -3,9 +3,9 @@ import javafx.scene.control.Alert;
 
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
-/*
-* 这是一个*/
 public abstract class ReqResult implements Serializable {
 //    这是服务器处理完需求之后返回的结果
     public abstract boolean solve();
@@ -45,13 +45,21 @@ class RegisterResult extends ReqResult {
 }
 class LoginResult extends ReqResult {
     private String name;
-
+    private String uuid = "";
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     @Override
@@ -70,5 +78,46 @@ class LoginResult extends ReqResult {
             al.showAndWait();
         }
         return true;
+    }
+}
+class QueryResult extends ReqResult{
+
+    List<Map<String,String>> records;
+
+    public QueryResult(List<Map<String, String>> records) {
+        this.records = records;
+    }
+
+    public List<Map<String, String>> getRecords() {
+        return records;
+    }
+
+    public void setRecords(List<Map<String, String>> texts) {
+        this.records = texts;
+    }
+
+    @Override
+    public boolean solve() {
+        return false;
+    }
+}
+class UpdateResult extends ReqResult{
+    Integer columnChanged;
+
+    public UpdateResult(Integer columnChanged) {
+        this.columnChanged = columnChanged;
+    }
+
+    public int getColumnChanged() {
+        return columnChanged;
+    }
+
+    public void setColumnChanged(Integer columnChanged) {
+        this.columnChanged = columnChanged;
+    }
+
+    @Override
+    public boolean solve() {
+        return false;
     }
 }

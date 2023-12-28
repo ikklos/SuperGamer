@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="350.0" prefWidth="422.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ScrollPane layoutY="55.0" prefHeight="295.0" prefWidth="422.0">
+         <content>
+            <Label fx:id="taskContant" text="Label" wrapText="true">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+         </content>
+      </ScrollPane>
+      <CheckBox fx:id="finishedCheckBox" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#setFinished" prefHeight="34.0" prefWidth="61.0" text="已完成" />
+      <Label fx:id="dateLabel" layoutX="191.0" layoutY="31.0" maxWidth="415.0" text="Label" wrapText="true">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Button fx:id="deleteButton" layoutX="353.0" layoutY="19.0" mnemonicParsing="false" onAction="#delete" prefHeight="16.0" prefWidth="43.0" text="删除" />
+      <AnchorPane layoutX="95.0" layoutY="3.0" prefHeight="23.0" prefWidth="233.0">
+         <children>
+            <Label fx:id="taskTitle" alignment="CENTER" layoutX="101.0" layoutY="4.0" text="label" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font size="13.0" />
+               </font></Label>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

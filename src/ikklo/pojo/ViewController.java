@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -18,7 +19,7 @@ public class ViewController {
     private Button LoginButton;
 
     @FXML
-    private TextField passwordInput;
+    private PasswordField passwordInput;
 
     @FXML
     private Button registButton;
@@ -47,11 +48,17 @@ public class ViewController {
             return;
         }
         LoginReq req = new LoginReq(user.getUsername(),user.getPassword());
+        System.out.println("Controller : " + req);
         user.send_requirement(req);
+        LoginResult res = (LoginResult)user.get_result();
 //        如果验证通过
-        if(user.get_result()){
+        /*
+        * 加载页面
+        */
+        if(!res.getUuid().isEmpty()){
             FXMLLoader loader = new FXMLLoader(getClass().getResource("mainPage_task.fxml"));
-            MainPageController con = new MainPageController();
+            user.setUuid(res.getUuid());
+            TaskPageController con = new TaskPageController(user);
 //            把user对象传给controller
             con.setUser(user);
             loader.setController(con);
@@ -61,6 +68,12 @@ public class ViewController {
             stage.setTitle("SGamer");
             stage.setScene(scene);
             stage.show();
+        }else{
+            Alert al = new Alert(Alert.AlertType.INFORMATION);
+            al.setTitle("寄！");
+            al.setContentText("登陆失败！");
+            al.showAndWait();
+            return;
         }
     }
     @FXML
