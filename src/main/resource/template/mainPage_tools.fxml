@@ -33,7 +33,7 @@
                 <Font size="24.0" />
             </font>
         </Label>
-        <Button fx:id="AddFileButton" layoutX="613.0" layoutY="63.0" mnemonicParsing="false" onAction="#AddAccount" prefHeight="26.0" prefWidth="47.0" text="+" />
+        <Button fx:id="AddFileButton" layoutX="613.0" layoutY="63.0" mnemonicParsing="false" onAction="#addNewFile" prefHeight="26.0" prefWidth="47.0" text="+" />
       <Button fx:id="displayAllButton" layoutX="14.0" layoutY="65.0" mnemonicParsing="false" onAction="#displayAll" prefHeight="23.0" prefWidth="71.0" text="显示全部" />
     </children>
 </AnchorPane>

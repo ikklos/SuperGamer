@@ -1,7 +1,10 @@
-package ikklo.server;
+package ikklo.pojo;
 
 import ikklo.pojo.ReqResult;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.sql.Connection;
 
 public interface CanSolve {
@@ -17,5 +20,8 @@ public interface CanSolve {
     * 要先验证uuid，与服务器端对应
     */
     ReqResult solve(Connection conn, StringReference uuid) throws Exception;
+
+    ReqResult solve(Connection conn, StringReference uuid, ObjectInputStream in) throws Exception;
+    ReqResult solve(Connection conn, StringReference uuid, ObjectOutputStream out) throws Exception;
 
 }

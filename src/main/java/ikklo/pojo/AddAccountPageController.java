@@ -10,8 +10,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.util.Map;
-
 public class AddAccountPageController {
     private User user;
 

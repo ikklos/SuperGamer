@@ -10,6 +10,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -78,40 +79,7 @@ public class AccountsPageController {
             user.send_requirement(queryReq);
             QueryResult res = (QueryResult)user.get_result();
             for(Map<String,String> map: res.getRecords()){
-                String text = "【" + map.get("gamename") + "】 : " + map.get("accountname") + "  " + map.get("note");
-                Label label = new Label();
-                label.setFont(Font.font(20));
-                label.setText(text);
-//                设置点击事件
-                label.setOnMouseClicked(mouseEvent->{
-                    try{
-                        Stage stage = new Stage();
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("account_detail.fxml"));
-                        AccountDetailPageController accountDetailPageController = new AccountDetailPageController(user,Integer.parseInt(map.get("id")));
-                        loader.setController(accountDetailPageController);
-
-                        Parent root = loader.load();
-                        Scene scene = new Scene(root);
-                        stage.initModality(Modality.APPLICATION_MODAL);
-                        stage.setResizable(false);
-                        stage.initStyle(StageStyle.UTILITY);
-                        stage.setTitle(map.get("gamename")+":"+map.get("accountname"));
-                        stage.setScene(scene);
-                        stage.setOnHiding(windowEvent -> {
-                            leftBox.getChildren().clear();
-                            rightBox.getChildren().clear();
-                            initialize();
-                        });
-                        stage.show();
-                    }catch (Exception e){
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("寄！");
-                        alert.setContentText("出错了:"+e.getMessage());
-                        alert.initModality(Modality.APPLICATION_MODAL);
-                        alert.showAndWait();
-                    }
-                });
-                leftBox.getChildren().add(label);
+                init_left(map);
             }
             initLikedGame();
         }catch (Exception e){
@@ -125,7 +93,7 @@ public class AccountsPageController {
     @FXML
     void AddAccount(ActionEvent event) {
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("add_account.fxml"));
+            FXMLLoader loader = new FXMLLoader(AccountsPageController.class.getClassLoader().getResource("resource/template/add_account.fxml"));
             AddAccountPageController addAccountPageController = new AddAccountPageController(user);
             loader.setController(addAccountPageController);
             Parent root = loader.load();
@@ -160,7 +128,7 @@ public class AccountsPageController {
     @FXML
     void changeToTaskPage(ActionEvent event) {
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("mainPage_task.fxml"));
+            FXMLLoader loader = new FXMLLoader(AccountsPageController.class.getClassLoader().getResource("resource/template/mainPage_task.fxml"));
             System.out.println("loader加载...");
             TaskPageController taskPageController = new TaskPageController(user);
             loader.setController(taskPageController);
@@ -181,7 +149,7 @@ public class AccountsPageController {
     @FXML
     void changeToToolsPage(ActionEvent event) {
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("mainPage_tools.fxml"));
+            FXMLLoader loader = new FXMLLoader(AccountsPageController.class.getClassLoader().getResource("resource/template/mainPage_tools.fxml"));
             ToolsPageController toolsPageController = new ToolsPageController(user);
             loader.setController(toolsPageController);
             Parent root = loader.load();
@@ -200,7 +168,7 @@ public class AccountsPageController {
     @FXML
     void changeToLikedGamePage(ActionEvent event) {
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("add_liked_game.fxml"));
+            FXMLLoader loader = new FXMLLoader(AccountsPageController.class.getClassLoader().getResource("resource/template/add_liked_game.fxml"));
             AddLikedGamePageController controller = new AddLikedGamePageController(user);
             loader.setController(controller);
             Parent root = loader.load();
@@ -245,6 +213,12 @@ public class AccountsPageController {
                 Label label = new Label();
                 label.setFont(new Font(20));
                 label.setText(name);
+                label.setOnMouseEntered(mouseEvent -> {
+                    label.setTextFill(Color.BROWN);
+                });
+                label.setOnMouseExited(mouseEvent -> {
+                    label.setTextFill(Color.BLACK);
+                });
 //                设置鼠标点击事件
                 label.setOnMouseClicked(mouseEvent -> {
 //                    把左边的box清掉
@@ -256,41 +230,7 @@ public class AccountsPageController {
                         QueryResult tasks = (QueryResult) user.get_result();
 //                        每一条数据都建一个label
                         for(Map<String,String> map1: tasks.getRecords()){
-                            Label accountText = new Label();
-                            String text ="【" + map1.get("gamename") + "】 : " + map1.get("accountname") + "  " + map1.get("note");
-                            accountText.setText(text);
-//                              定义鼠标点击时间
-                            accountText.setOnMouseClicked(event-> {
-//                                System.out.println("文字被点击了！");
-                                try{
-                                    Stage stage = new Stage();
-                                    FXMLLoader loader = new FXMLLoader(getClass().getResource("account_detail.fxml"));
-                                    AccountDetailPageController accountDetailPageController = new AccountDetailPageController(user,Integer.parseInt(map.get("id")));
-                                    loader.setController(accountDetailPageController);
-
-                                    Parent root = loader.load();
-                                    Scene scene = new Scene(root);
-                                    stage.initModality(Modality.APPLICATION_MODAL);
-                                    stage.setResizable(false);
-                                    stage.initStyle(StageStyle.UTILITY);
-                                    stage.setTitle(map.get("gamename")+":"+map.get("accountname"));
-                                    stage.setScene(scene);
-                                    stage.setOnHiding(windowEvent -> {
-                                        leftBox.getChildren().clear();
-                                        rightBox.getChildren().clear();
-                                        initialize();
-                                    });
-                                    stage.show();
-                                }catch (Exception e){
-                                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                                    alert.setTitle("寄！");
-                                    alert.setContentText("出错了:"+e.getMessage());
-                                    alert.initModality(Modality.APPLICATION_MODAL);
-                                    alert.showAndWait();
-                                }
-                            });
-                            accountText.setFont(new Font(20));
-                            leftBox.getChildren().add(accountText);
+                            init_left(map1);
                         }
                     }catch (Exception e){
                         throw new RuntimeException(e);
@@ -304,5 +244,47 @@ public class AccountsPageController {
             alert.setContentText("给我个痛快");
             alert.showAndWait();
         }
+    }
+    private void init_left(Map<String ,String> map){
+        String text = "【" + map.get("gamename") + "】" + map.get("accountname") + "  " + map.get("note");
+        Label label = new Label();
+        label.setFont(Font.font(20));
+        label.setText(text);
+        label.setOnMouseEntered(mouseEvent -> {
+            label.setTextFill(Color.BROWN);
+        });
+        label.setOnMouseExited(mouseEvent -> {
+            label.setTextFill(Color.BLACK);
+        });
+//                设置点击事件
+        label.setOnMouseClicked(mouseEvent->{
+            try{
+                Stage stage = new Stage();
+                FXMLLoader loader = new FXMLLoader(AccountsPageController.class.getClassLoader().getResource("resource/template/account_detail.fxml"));
+                AccountDetailPageController accountDetailPageController = new AccountDetailPageController(user,Integer.parseInt(map.get("id")));
+                loader.setController(accountDetailPageController);
+
+                Parent root = loader.load();
+                Scene scene = new Scene(root);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setResizable(false);
+                stage.initStyle(StageStyle.UTILITY);
+                stage.setTitle(map.get("gamename")+":"+map.get("accountname"));
+                stage.setScene(scene);
+                stage.setOnHiding(windowEvent -> {
+                    leftBox.getChildren().clear();
+                    rightBox.getChildren().clear();
+                    initialize();
+                });
+                stage.show();
+            }catch (Exception e){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("寄！");
+                alert.setContentText("出错了:"+e.getMessage());
+                alert.initModality(Modality.APPLICATION_MODAL);
+                alert.showAndWait();
+            }
+        });
+        leftBox.getChildren().add(label);
     }
 }

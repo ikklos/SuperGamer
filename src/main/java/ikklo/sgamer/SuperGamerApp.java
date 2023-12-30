@@ -21,7 +21,7 @@ public class SuperGamerApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("view.fxml"));
+        FXMLLoader loader = new FXMLLoader(SuperGamerApp.class.getClassLoader().getResource("resource/template/view.fxml"));
 //        主界面控制器
         ViewController viewController = new ViewController();
         viewController.setUser(user);

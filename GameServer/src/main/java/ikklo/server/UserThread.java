@@ -10,6 +10,7 @@ package ikklo.server;
 
 import ikklo.pojo.ReqResult;
 import ikklo.pojo.Requirement;
+import ikklo.pojo.StringReference;
 
 import java.io.EOFException;
 import java.io.ObjectInputStream;
@@ -54,15 +55,16 @@ public class UserThread implements Runnable{
                 Requirement req = (Requirement) in.readObject();
                 System.out.println(req);
 //                把结果写入输出流
+                clientsocket.setSoTimeout(1000);
                 ReqResult res = req.solve(conn,uuid);
                 if(res == null)res = req.solve(conn);
+                if(res == null)res = req.solve(conn,uuid,in);
+                if(res == null)res = req.solve(conn,uuid,out);
+                clientsocket.setSoTimeout(0);
                 out.writeObject(res);
             }
-
-
         }catch(EOFException e){
             System.out.println("客户端关闭连接");
-
         }catch (Exception e2){
             System.out.println("出错了！" + e2.getMessage());
         }

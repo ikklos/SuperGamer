@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -84,21 +85,7 @@ public class TaskPageController {
                     try{
                         for(Map<String,String> map: res.getRecords()){
 //                              对每一条记录创建一个label
-                            Label label = new Label();
-                            String text ="【" + map.get("gamename") + "】: " +  map.get("contant");
-                            int endIndex = Math.min(50,text.length());
-                            label.setText(text.substring(0,endIndex));
-//                              定义鼠标点击时间
-                            label.setOnMouseClicked(event-> {
-//                                System.out.println("文字被点击了！");
-                                try {
-                                    lookContant(Integer.parseInt(map.get("id")));
-                                } catch (Exception e) {
-                                    throw new RuntimeException(e);
-                                }
-                            });
-                            label.setFont(new Font(20));
-                            leftBox.getChildren().add(label);
+                           init_left(map);
                         }
                         initLikedGame();
                     }catch (Exception e){
@@ -116,7 +103,7 @@ public class TaskPageController {
         * 打开添加任务页面*/
         try{
             AddTaskPageController addTaskPageController = new AddTaskPageController(user);
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("add_task_page.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(TaskPageController.class.getClassLoader().getResource("resource/template/add_task_page.fxml"));
             fxmlLoader.setController(addTaskPageController);
             Parent root = fxmlLoader.load();
             Scene scene = new Scene(root);
@@ -146,7 +133,7 @@ public class TaskPageController {
     @FXML
     void changeToAccountsPage(ActionEvent event){
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("mainPage_accounts.fxml"));
+            FXMLLoader loader = new FXMLLoader(TaskPageController.class.getClassLoader().getResource("resource/template/mainPage_accounts.fxml"));
             System.out.println("loader加载...");
             AccountsPageController accountsPageController = new AccountsPageController(user);
             loader.setController(accountsPageController);
@@ -173,7 +160,7 @@ public class TaskPageController {
     @FXML
     void changeToToolsPage(ActionEvent event) {
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("mainPage_tools.fxml"));
+            FXMLLoader loader = new FXMLLoader(TaskPageController.class.getClassLoader().getResource("resource/template/mainPage_tools.fxml"));
             ToolsPageController toolsPageController = new ToolsPageController(user);
             loader.setController(toolsPageController);
             Parent root = loader.load();
@@ -195,7 +182,7 @@ public class TaskPageController {
         * 加载任务详情页
         */
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("task_detail.fxml"));
+            FXMLLoader loader = new FXMLLoader(TaskPageController.class.getClassLoader().getResource("resource/template/task_detail.fxml"));
             TaskDetailController taskDetailController = new TaskDetailController(user,id);
             loader.setController(taskDetailController);
             Parent root = loader.load();
@@ -231,7 +218,7 @@ public class TaskPageController {
     @FXML
     void changeToLikedGamePage(ActionEvent event) {
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("add_liked_game.fxml"));
+            FXMLLoader loader = new FXMLLoader(TaskPageController.class.getClassLoader().getResource("resource/template/add_liked_game.fxml"));
             AddLikedGamePageController controller = new AddLikedGamePageController(user);
             loader.setController(controller);
             Parent root = loader.load();
@@ -289,6 +276,12 @@ public class TaskPageController {
                 Label label = new Label();
                 label.setFont(new Font(20));
                 label.setText(name);
+                label.setOnMouseEntered(mouseEvent -> {
+                    label.setTextFill(Color.BROWN);
+                });
+                label.setOnMouseExited(mouseEvent -> {
+                    label.setTextFill(Color.BLACK);
+                });
 //                设置鼠标点击事件
                 label.setOnMouseClicked(mouseEvent -> {
 //                    把左边的box清掉
@@ -300,21 +293,7 @@ public class TaskPageController {
                         QueryResult tasks = (QueryResult) user.get_result();
 //                        每一条数据都建一个label
                         for(Map<String,String> map1: tasks.getRecords()){
-                            Label taskText = new Label();
-                            String text ="【" + map1.get("gamename") + "】: " +  map1.get("contant");
-                            int endIndex = Math.min(50,text.length());
-                            taskText.setText(text.substring(0,endIndex));
-//                              定义鼠标点击时间
-                            taskText.setOnMouseClicked(event-> {
-//                                System.out.println("文字被点击了！");
-                                try {
-                                    lookContant(Integer.parseInt(map1.get("id")));
-                                } catch (Exception e) {
-                                    throw new RuntimeException(e);
-                                }
-                            });
-                            taskText.setFont(new Font(20));
-                            leftBox.getChildren().add(taskText);
+                            init_left(map1);
                         }
                     }catch (Exception e){
                         throw new RuntimeException(e);
@@ -328,5 +307,28 @@ public class TaskPageController {
             alert.setContentText("给我个痛快");
             alert.showAndWait();
         }
+    }
+    private void init_left(Map<String,String> map){
+        Label label = new Label();
+        String text ="【" + map.get("gamename") + "】" +  map.get("contant");
+        int endIndex = Math.min(50,text.length());
+        label.setText(text.substring(0,endIndex));
+        label.setOnMouseEntered(mouseEvent -> {
+            label.setTextFill(Color.BROWN);
+        });
+        label.setOnMouseExited(mouseEvent -> {
+            label.setTextFill(Color.BLACK);
+        });
+//                              定义鼠标点击时间
+        label.setOnMouseClicked(event-> {
+//                                System.out.println("文字被点击了！");
+            try {
+                lookContant(Integer.parseInt(map.get("id")));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        label.setFont(new Font(20));
+        leftBox.getChildren().add(label);
     }
 }

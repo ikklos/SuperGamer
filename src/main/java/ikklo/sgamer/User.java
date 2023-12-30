@@ -1,8 +1,7 @@
 package ikklo.sgamer;
 
 import ikklo.pojo.ReqResult;
-import ikklo.server.CanSolve;
-import javafx.scene.control.Button;
+import ikklo.pojo.CanSolve;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -106,6 +105,22 @@ public class User {
         System.out.println(in);
     }
 
+
+    public ObjectInputStream getIn() {
+        return in;
+    }
+
+    public void setIn(ObjectInputStream in) {
+        this.in = in;
+    }
+
+    public ObjectOutputStream getOut() {
+        return out;
+    }
+
+    public void setOut(ObjectOutputStream out) {
+        this.out = out;
+    }
 
     //    客户端：处理请求
     /*

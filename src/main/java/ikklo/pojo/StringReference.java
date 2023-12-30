@@ -1,4 +1,4 @@
-package ikklo.server;
+package ikklo.pojo;
 
 public class StringReference {
     private String str;

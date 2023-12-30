@@ -1,0 +1,19 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SuperGamer:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SuperGamer_jar</output-path>
+    <root id="archive" name="SuperGamer.jar">
+      <element id="module-output" name="SuperGamer" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/Lib/mysql-connector-j-8.2.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="E:/javapackages/javafx-sdk-21.0.1/lib/javafx.controls.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="E:/javapackages/javafx-sdk-21.0.1/lib/javafx.base.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="E:/javapackages/javafx-sdk-21.0.1/lib/javafx.fxml.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="E:/javapackages/javafx-sdk-21.0.1/lib/javafx.graphics.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="E:/javapackages/javafx-sdk-21.0.1/lib/javafx-swt.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="E:/javapackages/javafx-sdk-21.0.1/lib/javafx.swing.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="E:/javapackages/javafx-sdk-21.0.1/lib/javafx.media.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="E:/javapackages/javafx-sdk-21.0.1/lib/javafx.web.jar" path-in-jar="/" />
+      <element id="library" level="project" name="javafx.controls" />
+      <element id="file-copy" path="$PROJECT_DIR$/Lib/mysql-connector-j-8.2.0.jar" />
+    </root>
+  </artifact>
+</component>

@@ -56,7 +56,7 @@ public class ViewController {
         * 加载页面
         */
         if(!res.getUuid().isEmpty()){
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("mainPage_task.fxml"));
+            FXMLLoader loader = new FXMLLoader(ViewController.class.getClassLoader().getResource("resource/template/mainPage_task.fxml"));
             user.setUuid(res.getUuid());
             TaskPageController con = new TaskPageController(user);
 //            把user对象传给controller
@@ -90,6 +90,7 @@ public class ViewController {
         }
         RegisterReq req = new RegisterReq(user.getUsername(),user.getPassword());
         user.send_requirement(req);
-        user.get_result();
+        RegisterResult res = (RegisterResult)user.get_result();
+        res.solve();
     }
 }

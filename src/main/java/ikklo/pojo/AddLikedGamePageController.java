@@ -9,8 +9,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import javax.management.Query;
-
 public class AddLikedGamePageController {
     private User user;
 
@@ -43,6 +41,7 @@ public class AddLikedGamePageController {
             alert.setContentText("你并没有输入游戏名称");
             alert.showAndWait();
             stage.close();
+            return;
         }
         try{
             QueryReq queryReq = new QueryReq(user.getUsername(),user.getUuid(),"select * from game where gamename = '" + gamename + "'");

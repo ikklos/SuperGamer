@@ -1,5 +1,6 @@
 package ikklo.pojo;
 import javafx.scene.control.Alert;
+import javafx.stage.Modality;
 
 
 import java.io.Serializable;
@@ -28,6 +29,7 @@ class RegisterResult extends ReqResult {
     @Override
     public boolean solve() {
         Alert al = new Alert(Alert.AlertType.INFORMATION);
+        al.initModality(Modality.APPLICATION_MODAL);
         if (name == null) {
             al.setTitle("完犊子啦");
             al.setTitle(null);
@@ -82,7 +84,7 @@ class LoginResult extends ReqResult {
 }
 class QueryResult extends ReqResult{
 
-    List<Map<String,String>> records;
+    private List<Map<String,String>> records;
 
     public QueryResult(List<Map<String, String>> records) {
         this.records = records;
@@ -102,7 +104,7 @@ class QueryResult extends ReqResult{
     }
 }
 class UpdateResult extends ReqResult{
-    Integer columnChanged;
+    private Integer columnChanged;
 
     public UpdateResult(Integer columnChanged) {
         this.columnChanged = columnChanged;
@@ -119,5 +121,41 @@ class UpdateResult extends ReqResult{
     @Override
     public boolean solve() {
         return false;
+    }
+}
+class UploadResult extends ReqResult{
+    private boolean uploaded;
+
+    public UploadResult(boolean uploaded) {
+        this.uploaded = uploaded;
+    }
+
+    @Override
+    public boolean solve() {
+        return uploaded;
+    }
+}
+class DownloadResult extends ReqResult{
+    private boolean downloaded;
+
+    public DownloadResult(boolean downloaded) {
+        this.downloaded = downloaded;
+    }
+
+    @Override
+    public boolean solve() {
+        return downloaded;
+    }
+}
+class DeleteResult extends ReqResult{
+    private boolean deleted;
+
+    public DeleteResult(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    @Override
+    public boolean solve() {
+        return deleted;
     }
 }

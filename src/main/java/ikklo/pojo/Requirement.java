@@ -1,10 +1,19 @@
 package ikklo.pojo;
 
-import ikklo.server.CanSolve;
-import ikklo.server.StringReference;
 
-import java.io.Serializable;
+import javafx.stage.Stage;
+
+import javax.swing.plaf.nimbus.State;
+import java.io.*;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.LocalDate;
@@ -21,6 +30,14 @@ public class Requirement implements CanSolve, Serializable {
 
     @Override
     public ReqResult solve(Connection conn, StringReference uuid) throws Exception {
+        return null;
+    }
+
+    @Override
+    public ReqResult solve(Connection conn, StringReference uuid, ObjectInputStream in) throws Exception {
+        return null;
+    }
+    public ReqResult solve(Connection conn, StringReference uuid, ObjectOutputStream out) throws Exception {
         return null;
     }
 
@@ -246,5 +263,196 @@ class UpdateTaskReq extends UpdateReq {
         }
 
         return super.solve(conn, serverside);
+    }
+}
+class UploadReq extends Requirement{
+    private String username;
+    private String uuid;
+    private String name;
+    private String filename;
+    private String gamename;
+    private String note = "";
+
+    public UploadReq(String username, String uuid, String name, String filename, String gamename) {
+        this.username = username;
+        this.uuid = uuid;
+        this.name = name;
+        this.filename = filename;
+        this.gamename = gamename;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    @Override
+    public UploadResult solve(Connection conn, StringReference serverside, ObjectInputStream in) throws Exception {
+        File f = new File("C://Users/ikklo/Downloads/" + username + "/" + filename);
+        if(!serverside.getStr().equals(uuid)){
+            clear_stream(in);
+            return new UploadResult(false);
+        }
+        try{
+            try{
+                conn.setAutoCommit(false);
+                String sql = "INSERT INTO gametool(username,gamename,name,url,note) values('" + username + "','" + gamename + "','" + name + "','" + filename + "','" +
+                                note + "')";
+                Statement stat = conn.createStatement();
+                int col = stat.executeUpdate(sql);
+                if(col < 1)throw new RuntimeException("添加文件失败！");
+            }catch (Exception e){
+                throw new Exception(e);
+            }
+            System.out.println("获取输入流");
+            ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+            FileOutputStream fileOutputStream;
+            try{
+                fileOutputStream = new FileOutputStream("C://Users/ikklo/Downloads/" + username + "/" + filename);
+            }catch (Exception e){
+//                如果没有这个目录先创建一个
+                Path path = Paths.get("C://Users/ikklo/Downloads/" + username + "/" + filename);
+                try {
+                    Files.createDirectories(path.getParent());
+                } catch (IOException e2) {
+                    e.printStackTrace();
+                }
+                fileOutputStream = new FileOutputStream("C://Users/ikklo/Downloads/" + username + "/" + filename);
+            }
+            System.out.println("获取地址");
+            FileChannel channel = fileOutputStream.getChannel();
+            FilePackage pac;
+            System.out.println("开始传输");
+            while(true){
+                pac = (FilePackage) in.readObject();
+//                System.out.println("读取一次");
+                buffer.put(pac.getData());
+                buffer.flip();
+                channel.write(buffer);
+                buffer.clear();
+                if(pac.isEnd())break;
+            }
+            System.out.println("传输完毕");
+            clear_stream(in);
+            channel.close();
+            conn.commit();
+            conn.setAutoCommit(true);
+            return new UploadResult(true);
+        }catch (Exception e){
+            f.delete();
+            conn.rollback();
+            conn.setAutoCommit(true);
+            System.out.println("传输文件出错！" + e.getMessage());
+            clear_stream(in);
+            return new UploadResult(false);
+        }
+    }
+    private void clear_stream(ObjectInputStream in){
+        while(true){
+            try {
+                Object pac = in.readObject();
+            } catch (Exception e){
+                return;
+            }
+        }
+    }
+}
+class DownLoadReq extends Requirement{
+    private String username;
+    private String uuid;
+
+    private int fileid;
+
+    public DownLoadReq(String username, String uuid, int fileid) {
+        this.username = username;
+        this.uuid = uuid;
+        this.fileid = fileid;
+    }
+
+    @Override
+    public DownloadResult solve(Connection conn, StringReference serverside, ObjectOutputStream out) throws Exception {
+        if(!serverside.getStr().equals(uuid)){
+            System.out.println("用户未登录！");
+            return new DownloadResult(false);
+        }
+        String sql = "SELECT * FROM gametool WHERE id = " + fileid;
+        try{
+            conn.setAutoCommit(false);
+            Statement stat = conn.createStatement();
+            ResultSet set = stat.executeQuery(sql);
+            if(!set.next()){
+                return new DownloadResult(false);
+            }
+//            拿到文件名
+            String filename = set.getString("url");
+            String url = "C://Users/ikklo/Downloads/" + username + "/" + filename;
+            File f = new File(url);
+            FileInputStream fileInputStream = new FileInputStream(f);
+            FileChannel channel = fileInputStream.getChannel();
+            ByteBuffer byteBuffer = ByteBuffer.allocateDirect(1024);
+            out.flush();
+            while(channel.read(byteBuffer) != -1){
+                byteBuffer.flip();
+                System.out.println(byteBuffer.remaining());
+                byte[] buffer = new byte[byteBuffer.remaining()];
+                byteBuffer.get(buffer);
+                FilePackage pac = new FilePackage(buffer);
+//                System.out.println("读取一次");
+                out.writeObject(pac);
+                byteBuffer.clear();
+            }
+            FilePackage endpac = new FilePackage(new byte[0]);
+            endpac.setEnd(true);
+            out.writeObject(endpac);
+            conn.commit();
+            conn.setAutoCommit(true);
+        }catch (Exception e){
+            conn.rollback();
+            conn.setAutoCommit(true);
+            e.printStackTrace();
+            return new DownloadResult(false);
+        }
+
+        return new DownloadResult(true);
+    }
+}
+class DeleteReq extends Requirement{
+    private String username;
+    private String uuid;
+    private String sql;
+    private String filename;
+
+    public DeleteReq(String username, String uuid, String sql, String filename) {
+        this.username = username;
+        this.uuid = uuid;
+        this.sql = sql;
+        this.filename = filename;
+    }
+
+    @Override
+    public DeleteResult solve(Connection conn, StringReference serverside) throws Exception {
+        if(!serverside.getStr().equals(uuid)){
+            System.out.println("用户未登录");
+            return new DeleteResult(false);
+        }
+        try{
+            conn.setAutoCommit(false);
+            Statement stat = conn.createStatement();
+            int col = stat.executeUpdate(sql);
+            if(col < 1)throw new RuntimeException("删除失败");
+            File f = new File("C://Users/ikklo/Downloads/" + username + "/" + filename);
+            if(!f.delete())throw new RuntimeException("删除失败");
+            conn.commit();
+            conn.setAutoCommit(true);
+        }catch (Exception e){
+            System.out.println(e);
+            conn.rollback();
+            conn.setAutoCommit(true);
+            return new DeleteResult(false);
+        }
+        return new DeleteResult(true);
     }
 }
